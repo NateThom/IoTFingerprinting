@@ -1,1 +1,15 @@
 *.pcapng
+*.csv
+*.png
+*.jpg
+*.eps
+*.pkl
+*.mdl
+*.pdf
+*.pickle
+
+.idea/
+wandb/
+
+*__pycache__*
+*agModels*
