@@ -12,12 +12,9 @@ import multiprocessing
 from tqdm import tqdm
 
 
-# class: Simhash
-class Simhash:
-    # call constructor
+class FlexHash:
     def __init__(self, acc_size, window_size, comb_size):
 
-        # set internal variables
         self.acc_size = acc_size
         self.window_size = window_size
 
@@ -35,17 +32,14 @@ class Simhash:
         for item in hash_const:
             self.hash_const.append(item)
 
-    # class method: hash combinations
     def hashenator(self, s):
         result = 1
         for item in s:
             result = item * result
         return (result + 3) % self.acc_size
 
-    # class method: calc_digest
     def calc_digest(self, str1, label):
 
-        # set a local counter to iterate
         counter = 0
 
         # iterate through string with sliding window of x bytes
@@ -84,31 +78,27 @@ class Simhash:
 
             for bit in this_byte:
                 new_string += str(bit)
-            # hash_list.append(int(new_string,2))
             entry = int(new_string, 2)
             hash_list.append(str(entry))
 
-        # append label
         hash_list.append(label)
 
-        # return final feature vector
         return hash_list
 
 
 def wrapper_function(filename, label, acc_size, window_size, ngram_size):
-    sim = Simhash(acc_size, window_size, ngram_size)
+    hash_obj = FlexHash(acc_size, window_size, ngram_size)
 
-    # open input file and read to str1 as bytes object
-    with open(filename, "rb") as pcap:
+    # Open input file and read to str1 as bytes object
+    with open(filename, "rb") as file_obj:
         # read in file...
-        str1 = pcap.read()
+        str1 = file_obj.read()
 
         # break into list of bytes objects
         strlist = [x for x in str1]
 
-        hashed = sim.calc_digest(strlist, label)
+        hashed = hash_obj.calc_digest(strlist, label)
 
-        # call sim.calc_digest
         return hashed
 
 
