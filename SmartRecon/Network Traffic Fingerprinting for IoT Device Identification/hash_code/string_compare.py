@@ -4,7 +4,7 @@ import os
 from nilsimsa import Nilsimsa
 
 
-def main(argv):
+def main():
     parser = argparse.ArgumentParser(
         description="Compute Nilsimsa similarity score of two files."
     )
@@ -39,4 +39,4 @@ def main(argv):
 
 
 if __name__ == "__main__":
-    main(sys.argv)
+    main()
