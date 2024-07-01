@@ -1,18 +1,33 @@
 import sys
 import os
 import time
+import argparse
 
 
-def main(argv):
+def main():
+
+    parser = argparse.ArgumentParser(description="Process some integers.")
+    parser.add_argument(
+        "inbase",
+        type=str,
+        help="Path to original files to be cleaned. Directory should be organized like inbase/files.",
+    )
+    parser.add_argument(
+        "outbase",
+        help="Path to save cleaned files.",
+    )
+    parser.add_argument(
+		"--sleep",
+		default=0.0,
+		help="Time to sleep between system calls. Only use this if system is behaving strangely during processing.",
+	)
+    args = parser.parse_args()
+
     hashes = []
-    inbase = "plug-8/per_packet_no_activity/"
-    outbase = "plug-8/per_packet_no_activity_cleaned/"
 
     for file in os.listdir(inbase):
-        inputfile = inbase + file
-        outputfile = outbase + file
-
-        print(inputfile + " : " + outputfile)
+        inputfile = args.inbase + file
+        outputfile = args.outbase + file
 
         command1 = (
             "tcprewrite --dlt=enet --infile="
@@ -20,16 +35,17 @@ def main(argv):
             + " "
             + "--outfile=temp.pcapng"
         )
-        os.system(command1)
-        # time.sleep(.03)
-
         command2 = (
             "tcprewrite --enet-dmac=11:11:11:11:11:11 --enet-smac=11:11:11:11:11:11 --pnat=192.168.0.0/16:1.1.1.1/32 --infile=temp.pcapng --outfile="
             + outputfile
         )
+
+        os.system(command1)
+        time.sleep(args.sleep)
+
         os.system(command2)
-        # time.sleep(.03)
+        time.sleep(args.sleep)
 
 
 if __name__ == "__main__":
-    main(sys.argv)
+    main()
