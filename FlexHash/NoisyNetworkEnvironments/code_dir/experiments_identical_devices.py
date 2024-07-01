@@ -27,9 +27,7 @@ path_to_same_cam_uncleaned_no_interaction = "/home/nthom/Documents/SmartRecon/Fi
 
 path_to_simhash = "/home/nthom/Documents/SmartRecon/Fingerprinting in Noisy Network Environments/data/simhashes/"
 
-device = int(
-            input("Select one of the following: \n1. Plug \n2. Light \n3. Cam\n")
-        )
+device = int(input("Select one of the following: \n1. Plug \n2. Light \n3. Cam\n"))
 if not device in [1, 2, 3]:
     raise ValueError(
         "'device' parameter must be one of the following values: 1, 2 or 3. 1 represents plugs, 2 "
@@ -44,21 +42,17 @@ elif device == 3:
 
 c_uc = int(input("Select one of the following: \n1. Cleaned \n2. Uncleaned\n"))
 if not c_uc in [1, 2]:
-    raise ValueError(
-        "'c_uc' selection must be one of the following values: 1 or 2,"
-    )
+    raise ValueError("'c_uc' selection must be one of the following values: 1 or 2,")
 
 accum = int(
-        input(
-            "Select one of the following accumulator sizes: \n128 \n256 \n512 \n1024\n"
-        )
-    )
+    input("Select one of the following accumulator sizes: \n128 \n256 \n512 \n1024\n")
+)
 if not accum in [128, 256, 512, 1024]:
     raise ValueError(
         "'accum' parameter must be one of the following values: 128, 256, 512 or 1024."
     )
 
-names = [f"dim{i}" for i in range(accum//8)]
+names = [f"dim{i}" for i in range(accum // 8)]
 names.append("class")
 
 window = int(input("Select one of the following window sizes: \n4 \n5 \n6\n"))
@@ -67,20 +61,14 @@ if not window in [4, 5, 6]:
         "'window' parameter must be one of the following values:4, 5, or 6."
     )
 if window == 4:
-    combo = int(
-        input("Select one of the following combination sizes: \n2 \n3 \n4\n")
-    )
+    combo = int(input("Select one of the following combination sizes: \n2 \n3 \n4\n"))
 elif window == 5:
     combo = int(
-        input(
-            "Select one of the following combination sizes: \n2 \n3 \n4 \n5\n"
-        )
+        input("Select one of the following combination sizes: \n2 \n3 \n4 \n5\n")
     )
 else:
     combo = int(
-        input(
-            "Select one of the following combination sizes: \n2 \n3 \n4 \n5 \n6\n"
-        )
+        input("Select one of the following combination sizes: \n2 \n3 \n4 \n5 \n6\n")
     )
 
 if c_uc == 1:
@@ -90,7 +78,9 @@ else:
 
 csv_list = []
 
-target_dir = f"{path_to_simhash}{device}/accum_{accum}/window_{window}/combo_{combo}/{c_uc}/"
+target_dir = (
+    f"{path_to_simhash}{device}/accum_{accum}/window_{window}/combo_{combo}/{c_uc}/"
+)
 for j in os.listdir(target_dir):
     csv_list.append(target_dir + j)
 
@@ -200,14 +190,16 @@ for model in tqdm(test_dataset_predictions.keys()):
     for value in test_dataset_matrix.diagonal() / test_dataset_matrix.sum(axis=1):
         accuracy_list.append(value)
         average_accuracy += value
-    average_accuracy /= len(test_dataset_matrix.diagonal() / test_dataset_matrix.sum(axis=1))
+    average_accuracy /= len(
+        test_dataset_matrix.diagonal() / test_dataset_matrix.sum(axis=1)
+    )
     accuracy_list.append(average_accuracy)
 
     test_dataset_f1 = f1_score(
         y_true=test_dataset_df["class"].values,
         y_pred=test_dataset_predictions[model],
         labels=unique_classes,
-        average=None
+        average=None,
     )
     # print(test_dataset_f1)
 
@@ -224,7 +216,7 @@ for model in tqdm(test_dataset_predictions.keys()):
         y_true=test_dataset_df["class"].values,
         y_pred=test_dataset_predictions[model],
         labels=unique_classes,
-        average=None
+        average=None,
     )
     # print(test_dataset_precision)
 
@@ -241,7 +233,7 @@ for model in tqdm(test_dataset_predictions.keys()):
         y_true=test_dataset_df["class"].values,
         y_pred=test_dataset_predictions[model],
         labels=unique_classes,
-        average=None
+        average=None,
     )
     # print(test_dataset_recall)
 
@@ -263,6 +255,6 @@ test_dataset_metric_df["Recall"] = recall_list
 test_dataset_metric_df["Device"] = device_list
 
 test_dataset_metric_df.to_csv(
-    f"{device}_{accum}_{window}_{combo}_identicalDevices_{gethostname()}.csv", index=False
+    f"{device}_{accum}_{window}_{combo}_identicalDevices_{gethostname()}.csv",
+    index=False,
 )
-

@@ -29,9 +29,7 @@ device_list = ["plug", "lightbulb", "cam"]
 
 c_uc = int(input("Select one of the following: \n1. Cleaned \n2. Uncleaned\n"))
 if not c_uc in [1, 2]:
-    raise ValueError(
-        "'c_uc' selection must be one of the following values: 1 or 2,"
-    )
+    raise ValueError("'c_uc' selection must be one of the following values: 1 or 2,")
 
 names = [f"dim{i}" for i in range(32)]
 names.append("class")
@@ -43,8 +41,10 @@ else:
 
 csv_list = []
 for device in tqdm(device_list):
-    target_dir = f"/home/nthom/Documents/SmartRecon/Fingerprinting in Noisy Network Environments/data/same_device/" \
-                 f"same_{device}/same_{device}_{c_uc}_no_interaction/"
+    target_dir = (
+        f"/home/nthom/Documents/SmartRecon/Fingerprinting in Noisy Network Environments/data/same_device/"
+        f"same_{device}/same_{device}_{c_uc}_no_interaction/"
+    )
     for j in os.listdir(target_dir):
         csv_list.append(target_dir + j)
 
@@ -68,7 +68,7 @@ y_original = dataset["class"].values.tolist()
 y = dataset["class"]
 
 x_train, x_test, y_train, y_test = train_test_split(
-    x.values, y.values, test_size=.8, stratify=y.values
+    x.values, y.values, test_size=0.8, stratify=y.values
 )
 
 names = list(range(x_train.shape[1]))
@@ -82,7 +82,9 @@ test_dataset_df.insert(test_dataset_df.shape[1], "class", y_test)
 query_string_list = ["plug", "light", "cam"]
 for query_string in query_string_list:
     train_dataset_df.loc[
-        train_dataset_df[train_dataset_df["class"].str.startswith(query_string)].index, "class"] = query_string
+        train_dataset_df[train_dataset_df["class"].str.startswith(query_string)].index,
+        "class",
+    ] = query_string
     # test_dataset_df.loc[
     #     test_dataset_df[test_dataset_df["class"].str.startswith(query_string)].index, "class"] = query_string
 
@@ -128,20 +130,24 @@ recall_list = []
 model_list = []
 device_list = []
 for current_class in unique_classes:
-    test_dataset_td = TabularDataset(test_dataset_df[test_dataset_df["class"]==current_class])
+    test_dataset_td = TabularDataset(
+        test_dataset_df[test_dataset_df["class"] == current_class]
+    )
     test_dataset_predictions = predictor.predict_multi(test_dataset_td, models=None)
     for model in test_dataset_predictions.keys():
         device_list.append(current_class)
 
         test_dataset_matrix = confusion_matrix(
-            y_true=test_dataset_df[test_dataset_df["class"]==current_class]["class"].values,
+            y_true=test_dataset_df[test_dataset_df["class"] == current_class][
+                "class"
+            ].values,
             y_pred=test_dataset_predictions[model],
             labels=unique_classes,
         )
 
         # test_dataset_metric_df["Accuracy"] = test_dataset_matrix.diagonal()/test_dataset_matrix.sum(axis=1)
         # print(test_dataset_metric_df)
-        for value in test_dataset_matrix.diagonal()/test_dataset_matrix.sum(axis=1):
+        for value in test_dataset_matrix.diagonal() / test_dataset_matrix.sum(axis=1):
             accuracy_list.append(value)
             model_list.append(model)
 
@@ -149,7 +155,7 @@ for current_class in unique_classes:
             y_true=test_dataset_df["class"].values,
             y_pred=test_dataset_predictions[model],
             labels=unique_classes,
-            average=None
+            average=None,
         )
         # print(test_dataset_f1)
 
@@ -162,7 +168,7 @@ for current_class in unique_classes:
             y_true=test_dataset_df["class"].values,
             y_pred=test_dataset_predictions[model],
             labels=unique_classes,
-            average=None
+            average=None,
         )
         # print(test_dataset_precision)
 
@@ -175,7 +181,7 @@ for current_class in unique_classes:
             y_true=test_dataset_df["class"].values,
             y_pred=test_dataset_predictions[model],
             labels=unique_classes,
-            average=None
+            average=None,
         )
         # print(test_dataset_recall)
 
@@ -191,9 +197,7 @@ test_dataset_metric_df["Precision"] = precision_list
 test_dataset_metric_df["Recall"] = recall_list
 test_dataset_metric_df["Device"] = device_list
 
-test_dataset_metric_df.to_csv(
-    f"nilsimsa_PvLvC_{gethostname()}.csv", index=False
-)
+test_dataset_metric_df.to_csv(f"nilsimsa_PvLvC_{gethostname()}.csv", index=False)
 
 # results = predictor.fit_summary()
 #

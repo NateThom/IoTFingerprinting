@@ -16,25 +16,21 @@ device_list = ["plug", "light", "cam"]
 
 c_uc = int(input("Select one of the following: \n1. Cleaned \n2. Uncleaned\n"))
 if not c_uc in [1, 2]:
-    raise ValueError(
-        "'c_uc' selection must be one of the following values: 1 or 2,"
-    )
+    raise ValueError("'c_uc' selection must be one of the following values: 1 or 2,")
 if c_uc == 1:
     c_uc = "cleaned"
 else:
     c_uc = "uncleaned"
 
 accum = int(
-        input(
-            "Select one of the following accumulator sizes: \n128 \n256 \n512 \n1024\n"
-        )
-    )
+    input("Select one of the following accumulator sizes: \n128 \n256 \n512 \n1024\n")
+)
 if not accum in [128, 256, 512, 1024]:
     raise ValueError(
         "'accum' parameter must be one of the following values: 128, 256, 512 or 1024."
     )
 
-names = [f"dim{i}" for i in range(accum//8)]
+names = [f"dim{i}" for i in range(accum // 8)]
 names.append("class")
 
 window = int(input("Select one of the following window sizes: \n4 \n5 \n6\n"))
@@ -43,25 +39,21 @@ if not window in [4, 5, 6]:
         "'window' parameter must be one of the following values:4, 5, or 6."
     )
 if window == 4:
-    combo = int(
-        input("Select one of the following combination sizes: \n2 \n3 \n4\n")
-    )
+    combo = int(input("Select one of the following combination sizes: \n2 \n3 \n4\n"))
 elif window == 5:
     combo = int(
-        input(
-            "Select one of the following combination sizes: \n2 \n3 \n4 \n5\n"
-        )
+        input("Select one of the following combination sizes: \n2 \n3 \n4 \n5\n")
     )
 else:
     combo = int(
-        input(
-            "Select one of the following combination sizes: \n2 \n3 \n4 \n5 \n6\n"
-        )
+        input("Select one of the following combination sizes: \n2 \n3 \n4 \n5 \n6\n")
     )
 
 csv_list = []
 for i in tqdm(device_list):
-    target_dir = f"{path_to_simhash}{i}/accum_{accum}/window_{window}/combo_{combo}/{c_uc}/"
+    target_dir = (
+        f"{path_to_simhash}{i}/accum_{accum}/window_{window}/combo_{combo}/{c_uc}/"
+    )
     for j in os.listdir(target_dir):
         csv_list.append(target_dir + j)
 
@@ -88,10 +80,14 @@ for device_name in sorted(dataset["class"].unique()):
         f"*** Samples for device: {device_name} in {name_of_current_data}: {num_samples} ({num_samples/dataset.shape[0]}%) ***"
     )
 
-filtered_dataset = dataset.loc[dataset['class'] != 'iot_noise']
-filtered_dataset = filtered_dataset.loc[dataset['class'] != 'network_noise']
-n_iot_noise_dataset = dataset.loc[dataset['class'] == 'iot_noise'][:total_non_noise_device_count//2]
-n_network_noise_dataset = dataset.loc[dataset['class'] == 'network_noise'][:total_non_noise_device_count//2]
+filtered_dataset = dataset.loc[dataset["class"] != "iot_noise"]
+filtered_dataset = filtered_dataset.loc[dataset["class"] != "network_noise"]
+n_iot_noise_dataset = dataset.loc[dataset["class"] == "iot_noise"][
+    : total_non_noise_device_count // 2
+]
+n_network_noise_dataset = dataset.loc[dataset["class"] == "network_noise"][
+    : total_non_noise_device_count // 2
+]
 dataset = pd.concat((filtered_dataset, n_iot_noise_dataset, n_network_noise_dataset))
 
 print(f"*** Total samples in {name_of_current_data}: {len(dataset.index)} ***")
@@ -110,7 +106,7 @@ y_original = dataset["class"].values.tolist()
 y = dataset["class"]
 
 x_train, x_test, y_train, y_test = train_test_split(
-    x.values, y.values, test_size=.8, stratify=y.values
+    x.values, y.values, test_size=0.8, stratify=y.values
 )
 
 names = list(range(x_train.shape[1]))
@@ -119,7 +115,10 @@ train_dataset_df.insert(train_dataset_df.shape[1], "class", y_train)
 
 query_string_list = ["plug", "light", "cam"]
 for query_string in query_string_list:
-    train_dataset_df.loc[train_dataset_df[train_dataset_df["class"].str.startswith(query_string)].index, "class"] = query_string
+    train_dataset_df.loc[
+        train_dataset_df[train_dataset_df["class"].str.startswith(query_string)].index,
+        "class",
+    ] = query_string
 
 names = list(range(x_test.shape[1]))
 test_dataset_df = pd.DataFrame(x_test, columns=names)
@@ -159,7 +158,10 @@ predictor = TabularPredictor.load(model_save_path)
 
 query_string_list = ["plug", "light", "cam"]
 for query_string in query_string_list:
-    test_dataset_df.loc[test_dataset_df[test_dataset_df["class"].str.startswith(query_string)].index, "class"] = query_string
+    test_dataset_df.loc[
+        test_dataset_df[test_dataset_df["class"].str.startswith(query_string)].index,
+        "class",
+    ] = query_string
 unique_classes = sorted(test_dataset_df["class"].unique())
 
 test_dataset_td = TabularDataset(test_dataset_df)
@@ -191,14 +193,16 @@ for model in tqdm(test_dataset_predictions.keys()):
     for value in test_dataset_matrix.diagonal() / test_dataset_matrix.sum(axis=1):
         accuracy_list.append(value)
         average_accuracy += value
-    average_accuracy /= len(test_dataset_matrix.diagonal() / test_dataset_matrix.sum(axis=1))
+    average_accuracy /= len(
+        test_dataset_matrix.diagonal() / test_dataset_matrix.sum(axis=1)
+    )
     accuracy_list.append(average_accuracy)
 
     test_dataset_f1 = f1_score(
         y_true=test_dataset_df["class"].values,
         y_pred=test_dataset_predictions[model],
         labels=unique_classes,
-        average=None
+        average=None,
     )
     # print(test_dataset_f1)
 
@@ -215,7 +219,7 @@ for model in tqdm(test_dataset_predictions.keys()):
         y_true=test_dataset_df["class"].values,
         y_pred=test_dataset_predictions[model],
         labels=unique_classes,
-        average=None
+        average=None,
     )
     # print(test_dataset_precision)
 
@@ -232,7 +236,7 @@ for model in tqdm(test_dataset_predictions.keys()):
         y_true=test_dataset_df["class"].values,
         y_pred=test_dataset_predictions[model],
         labels=unique_classes,
-        average=None
+        average=None,
     )
     # print(test_dataset_recall)
 

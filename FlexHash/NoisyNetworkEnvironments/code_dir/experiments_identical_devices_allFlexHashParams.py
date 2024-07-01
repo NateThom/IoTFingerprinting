@@ -27,7 +27,9 @@ path_to_same_cam_uncleaned_no_interaction = "/home/nthom/Documents/SmartRecon/Fi
 
 path_to_simhash = "/home/nthom/Documents/SmartRecon/Fingerprinting in Noisy Network Environments/data/simhashes/"
 
-device_list = int(input("Select one of the following: \n1. Plug \n2. Light \n3. Cam \n4. All\n"))
+device_list = int(
+    input("Select one of the following: \n1. Plug \n2. Light \n3. Cam \n4. All\n")
+)
 if not device_list in [1, 2, 3, 4]:
     raise ValueError(
         "'device_list' selection must be one of the following values: 1 or 2,"
@@ -57,8 +59,19 @@ if not window_list in [4, 5, 6]:
 window_list = [window_list]
 # window_list = [4, 5, 6]
 
-all_params_best_model_performance = [["Device", "Accum", "Window", "Combo", "Model Name", "f1_micro", "accuracy",
-                                      "balanced_accuracy", "mcc"]]
+all_params_best_model_performance = [
+    [
+        "Device",
+        "Accum",
+        "Window",
+        "Combo",
+        "Model Name",
+        "f1_micro",
+        "accuracy",
+        "balanced_accuracy",
+        "mcc",
+    ]
+]
 c_uc = "cleaned"
 for device in device_list:
     if device == 1:
@@ -87,12 +100,16 @@ for device in device_list:
                 for j in os.listdir(target_dir):
                     csv_list.append(target_dir + j)
 
-                name_of_current_data = f"FlexHash-identical{device}AllFlexHashParams-{device}-accum_{accum}-window_" \
-                                       f"{window}-combo_{combo}-cleaned"
+                name_of_current_data = (
+                    f"FlexHash-identical{device}AllFlexHashParams-{device}-accum_{accum}-window_"
+                    f"{window}-combo_{combo}-cleaned"
+                )
                 dataset = combine_csv(csv_list, names)
                 dataset.reset_index(drop=True, inplace=True)
 
-                print(f"*** Total samples in {name_of_current_data}: {len(dataset.index)} ***")
+                print(
+                    f"*** Total samples in {name_of_current_data}: {len(dataset.index)} ***"
+                )
                 for device_name in sorted(dataset["class"].unique()):
                     num_samples = len((dataset[dataset["class"] == device_name]).index)
                     print(
@@ -140,7 +157,7 @@ for device in device_list:
                     x_test,
                     y_test,
                     dataset,
-                    y_temp
+                    y_temp,
                 )
 
                 model_save_path = f"agModels-{name_of_current_data}_{gethostname()}"
@@ -151,16 +168,28 @@ for device in device_list:
                 # train_dataset_td = train_dataset_td.sample(n=subsample_size, random_state=0)
 
                 label = "class"
-                print("Summary of class variable: \n", train_dataset_td[label].describe())
+                print(
+                    "Summary of class variable: \n", train_dataset_td[label].describe()
+                )
 
-                del (train_dataset_df)
+                del train_dataset_df
 
                 predictor = TabularPredictor(
                     eval_metric="f1_micro", label="class", path=model_save_path
-                ).fit(train_dataset_td, presets="best_quality",
-                      excluded_model_types=["CAT", "KNN", "RF", "FASTAI", "LR", "NN_TORCH", "AG_AUTOMM"],
-                      keep_only_best=True
-                      )
+                ).fit(
+                    train_dataset_td,
+                    presets="best_quality",
+                    excluded_model_types=[
+                        "CAT",
+                        "KNN",
+                        "RF",
+                        "FASTAI",
+                        "LR",
+                        "NN_TORCH",
+                        "AG_AUTOMM",
+                    ],
+                    keep_only_best=True,
+                )
 
                 results = predictor.fit_summary()
 
@@ -186,7 +215,10 @@ for device in device_list:
                 shutil.rmtree(f"agModels-{name_of_current_data}_{gethostname()}")
 
                 output_df = pd.DataFrame(all_params_best_model_performance)
-                output_df.to_csv(f"{device}_{accum}_{window}_allFlexHashParams_{gethostname()}.csv", index=False)
+                output_df.to_csv(
+                    f"{device}_{accum}_{window}_allFlexHashParams_{gethostname()}.csv",
+                    index=False,
+                )
 
             # break
         # break

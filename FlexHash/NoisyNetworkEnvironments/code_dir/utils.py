@@ -45,6 +45,7 @@ def combine_csv(csv_list, names):
 
     return final_df
 
+
 def combine_csv_category(csv_list, names):
     final_df = pd.DataFrame(columns=names)
     temp_df_list = []

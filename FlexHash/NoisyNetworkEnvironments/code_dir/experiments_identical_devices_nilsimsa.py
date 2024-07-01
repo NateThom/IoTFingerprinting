@@ -25,9 +25,7 @@ path_to_same_cam_cleaned_no_interaction = "/home/nthom/Documents/SmartRecon/Fing
 path_to_same_cam_uncleaned_interaction = "/home/nthom/Documents/SmartRecon/Fingerprinting in Noisy Network Environments/data/same_device/same_cam/same_cam_uncleaned_interaction/"
 path_to_same_cam_uncleaned_no_interaction = "/home/nthom/Documents/SmartRecon/Fingerprinting in Noisy Network Environments/data/same_device/same_cam/same_cam_uncleaned_no_interaction/"
 
-device = int(
-            input("Select one of the following: \n1. Plug \n2. Light \n3. Cam\n")
-        )
+device = int(input("Select one of the following: \n1. Plug \n2. Light \n3. Cam\n"))
 if not device in [1, 2, 3]:
     raise ValueError(
         "'device' parameter must be one of the following values: 1, 2 or 3. 1 represents plugs, 2 "
@@ -42,9 +40,7 @@ elif device == 3:
 
 c_uc = int(input("Select one of the following: \n1. Cleaned \n2. Uncleaned\n"))
 if not c_uc in [1, 2]:
-    raise ValueError(
-        "'c_uc' selection must be one of the following values: 1 or 2,"
-    )
+    raise ValueError("'c_uc' selection must be one of the following values: 1 or 2,")
 
 names = [f"dim{i}" for i in range(32)]
 names.append("class")
@@ -56,8 +52,10 @@ else:
 
 csv_list = []
 
-target_dir = f"/home/nthom/Documents/SmartRecon/Fingerprinting in Noisy Network Environments/data/same_device/" \
-                 f"same_{device}/same_{device}_{c_uc}_no_interaction/"
+target_dir = (
+    f"/home/nthom/Documents/SmartRecon/Fingerprinting in Noisy Network Environments/data/same_device/"
+    f"same_{device}/same_{device}_{c_uc}_no_interaction/"
+)
 for j in os.listdir(target_dir):
     csv_list.append(target_dir + j)
 
@@ -149,7 +147,7 @@ for model in tqdm(test_dataset_predictions.keys()):
     # test_dataset_metric_df["Accuracy"] = test_dataset_matrix.diagonal()/test_dataset_matrix.sum(axis=1)
     # print(test_dataset_metric_df)
     average_accuracy = 0
-    for value in test_dataset_matrix.diagonal()/test_dataset_matrix.sum(axis=1):
+    for value in test_dataset_matrix.diagonal() / test_dataset_matrix.sum(axis=1):
         accuracy_list.append(value)
         average_accuracy += value
     average_accuracy /= 8
@@ -159,7 +157,7 @@ for model in tqdm(test_dataset_predictions.keys()):
         y_true=test_dataset_df["class"].values,
         y_pred=test_dataset_predictions[model],
         labels=unique_classes,
-        average=None
+        average=None,
     )
     # print(test_dataset_f1)
 
@@ -176,7 +174,7 @@ for model in tqdm(test_dataset_predictions.keys()):
         y_true=test_dataset_df["class"].values,
         y_pred=test_dataset_predictions[model],
         labels=unique_classes,
-        average=None
+        average=None,
     )
     # print(test_dataset_precision)
 
@@ -186,14 +184,14 @@ for model in tqdm(test_dataset_predictions.keys()):
     for value in test_dataset_precision:
         precision_list.append(value)
         average_precision += value
-    average_precision /=8
+    average_precision /= 8
     precision_list.append(average_precision)
 
     test_dataset_recall = recall_score(
         y_true=test_dataset_df["class"].values,
         y_pred=test_dataset_predictions[model],
         labels=unique_classes,
-        average=None
+        average=None,
     )
     # print(test_dataset_recall)
 
@@ -203,7 +201,7 @@ for model in tqdm(test_dataset_predictions.keys()):
     for value in test_dataset_recall:
         recall_list.append(value)
         average_recall += value
-    average_recall /=8
+    average_recall /= 8
     recall_list.append(average_recall)
 
 # print(model_list, accuracy_list)
@@ -218,4 +216,3 @@ test_dataset_metric_df["Device"] = device_list
 test_dataset_metric_df.to_csv(
     f"{device}_nilsimsa_identicalDevices_{gethostname()}.csv", index=False
 )
-

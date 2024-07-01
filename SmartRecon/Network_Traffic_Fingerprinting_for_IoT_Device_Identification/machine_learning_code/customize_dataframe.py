@@ -1,9 +1,11 @@
 import pandas as pd
 import os
 
+
 def remove_class(class_name, dataset):
     dataset = dataset[dataset["class"] != class_name]
     return dataset
+
 
 # Remove list of classes from a group of datasets
 
@@ -29,9 +31,41 @@ def remove_class(class_name, dataset):
 # #     for item in classes_to_remove:
 # #         dataset = remove_class(item, dataset)
 
-names = ['dim1','dim2','dim3','dim4','dim5','dim6','dim7','dim8','dim9','dim10','dim11',
-         'dim12','dim13','dim14','dim15','dim16','dim17','dim18','dim19','dim20','dim21',
-         'dim22','dim23','dim24','dim25','dim26','dim27','dim28','dim29','dim30','dim31','dim32','class']
+names = [
+    "dim1",
+    "dim2",
+    "dim3",
+    "dim4",
+    "dim5",
+    "dim6",
+    "dim7",
+    "dim8",
+    "dim9",
+    "dim10",
+    "dim11",
+    "dim12",
+    "dim13",
+    "dim14",
+    "dim15",
+    "dim16",
+    "dim17",
+    "dim18",
+    "dim19",
+    "dim20",
+    "dim21",
+    "dim22",
+    "dim23",
+    "dim24",
+    "dim25",
+    "dim26",
+    "dim27",
+    "dim28",
+    "dim29",
+    "dim30",
+    "dim31",
+    "dim32",
+    "class",
+]
 
 path_to_datasets = "/home/nthom/Documents/hashdata/new_data/same_plug_uncleaned/"
 device_csvs = os.listdir(path_to_datasets)

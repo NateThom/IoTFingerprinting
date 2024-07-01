@@ -1,6 +1,7 @@
 import os
 import yaml
 
+
 def yaml_config_hook(config_file):
     """
     Custom YAML config loader, which can include other yaml files (I like using config files
