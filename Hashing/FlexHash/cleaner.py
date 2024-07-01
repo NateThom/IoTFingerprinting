@@ -6,7 +6,9 @@ import argparse
 
 def main():
 
-    parser = argparse.ArgumentParser(description="Process some integers.")
+    parser = argparse.ArgumentParser(
+        description="Anonymize pcapng traffic by setting ip/mac address to 1s and recalculating checksums."
+    )
     parser.add_argument(
         "inbase",
         type=str,
@@ -14,13 +16,15 @@ def main():
     )
     parser.add_argument(
         "outbase",
+        type=str,
         help="Path to save cleaned files.",
     )
     parser.add_argument(
-		"--sleep",
-		default=0.0,
-		help="Time to sleep between system calls. Only use this if system is behaving strangely during processing.",
-	)
+        "--sleep",
+        default=0.0,
+        type=float,
+        help="Time to sleep between system calls. Only use this if system is behaving strangely during processing.",
+    )
     args = parser.parse_args()
 
     hashes = []
