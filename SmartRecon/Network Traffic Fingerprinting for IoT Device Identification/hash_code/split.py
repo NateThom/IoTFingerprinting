@@ -17,7 +17,6 @@ def splitter(input_pcap, outputbase, increment):
     splitted = out.split(b"\n")
     last_second = int(float(splitted[-2]))
 
-
     window_insecond = 60 * 1
     counter = 1
     if last_second > window_insecond:
@@ -35,8 +34,8 @@ def splitter(input_pcap, outputbase, increment):
 
             command = "tshark -r " + input_pcap
             command += " -Y 'frame.time_relative >= "
-            command += + str(start_time)
-            command += + " and frame.time_relative <= "
+            command += +str(start_time)
+            command += +" and frame.time_relative <= "
             command += str(end_time) + "' -w "
             command += output_pcap
 
@@ -74,6 +73,7 @@ def main():
             input_pcap = inpath + folder + "/" + file
             outputbase = outpath + f"{counter}-minute/" + folder + "/"
             splitter(input_pcap, outputbase, counter)
+
 
 if __name__ == "__main__":
     main()
