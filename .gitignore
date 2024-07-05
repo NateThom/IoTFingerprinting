@@ -11,6 +11,7 @@ access_token
 *.pickle
 
 .idea/
+.vscode/
 wandb/
 
 *__pycache__*

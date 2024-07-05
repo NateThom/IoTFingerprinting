@@ -9,19 +9,19 @@ def main():
         description="Compute Nilsimsa similarity score of two files."
     )
     parser.add_argument(
-        "filepath1",
+        "string1",
         type=str,
-        help="Path to first file to be compared.",
+        help="First string to be compared.",
     )
     parser.add_argument(
-        "filepath2",
+        "string2",
         type=str,
-        help="Path to second file to be compared.",
+        help="Second string to be compared.",
     )
     args = parser.parse_args()
 
-    str1 = args.filepath1
-    str2 = args.filepath2
+    str1 = args.string1
+    str2 = args.string2
 
     n1 = Nilsimsa()
     n1.update(str1)
