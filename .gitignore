@@ -9,6 +9,7 @@ access_token
 *.mdl
 *.pdf
 *.pickle
+*.tar.gz
 
 .idea/
 wandb/
