@@ -12,6 +12,7 @@ access_token
 *.tar.gz
 
 .idea/
+.vscode/
 wandb/
 
 *__pycache__*
